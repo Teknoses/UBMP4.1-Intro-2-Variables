@@ -22,12 +22,17 @@
 // TODO Set linker code offset to '800' under "Additional options" pull-down.
 
 // Program constant definitions
-const unsigned char maxCount = 50;
+const unsigned char maxCount = 25;
 
 // Program variable definitions
 unsigned char SW2Count = 0;
 bool SW2Pressed = false;
+//Progamming Acitivity 1
+unsigned char SW5Count = 0;
+bool SW5Pressed = false;
 
+#define pressed 0
+#define notPressed 1
 int main(void)
 {
     // Configure oscillator and I/O ports. These functions run once at start-up.
@@ -37,20 +42,33 @@ int main(void)
     // Code in this while loop runs repeatedly.
     while(1)
 	{
-        // Count SW2 button presses
-        if(SW2 == 0)
+        // Count new SW2 button presses (Progamming Activity 1)
+        if(SW2 == pressed && SW2Pressed == false)
         {
             LED3 = 1;
             if(SW2Count < 255)
             {
-            SW2Count += 1;
+                SW2Count = SW2Count + 1;
             }
+            SW2Pressed = true;
         }
-        else
+          if(SW5 == pressed && SW5Pressed == false)
         {
-            LED3 = 0;
+            LED6 = 1;
+            if(SW5Count < 255)
+            {
+                SW2Count = SW2Count + 1;
+            }
+            SW2Pressed = true;
         }
-        
+
+        // Clear pressed state if released
+        if(SW5 == notPressed)
+        {
+            LED6 = 0;
+            SW5Pressed = false;
+        }
+    //Reset Button (Programming Activity 1)    
     if(SW2Count >= maxCount)
         {
             LED4 = 1;
@@ -59,12 +77,22 @@ int main(void)
         {
             LED4 = 0;
         }
+         if(SW5Count >= maxCount)
+        {
+            LED5 = 1;
+        }
+        else
+        {
+            LED5 = 0;
+        }
         
-        // Reset count and turn off LED D4
-        if(SW3 == 0)
+        // Reset count and turn off LED D4 (Program Analysis 7) (Programming Activity 1)
+        if(SW3 == pressed||SW4 == pressed)
         {
             LED4 = 0;
             SW2Count = 0;
+            LED5 = 0;
+            SW5Count = 0;
         }
         
         // Add a short delay to the main while loop.
@@ -122,7 +150,7 @@ int main(void)
  *    value of the SW2Count variable? Can you explain what happens to the
  *    SW2Count variable as the SW2 button is held?
  * If the LED D4 turns off, then the value of SW2Count is less than the value of maxCount, or lower than 50. 
- * When the the value hits 256, it resets back to 0, making it less than 50.
+ * When the the value hits over 255, it resets back to 0, making it less than 50.
  * 5. We can set a limit on the SW2Count variable by encapsulating its increment
  *    statement inside a conditional statement. In your program, replace the
  *    line 'SW2Count = SW2Count + 1;' with the code, below:
@@ -138,7 +166,7 @@ int main(void)
  *    value that the SW2Count variable will reach? How does this affect the
  *    operation of LED D4 when SW2 is held?
  * The maximum value SW2Count can reach is 255, after it will not anymore to the value.
- * This effects of this for the LED D4 is that SW2Count will no longer reset back to 0, so it will not turn off when held.
+ * This effects of this for the LED D4 is that SW2Count will no longer reset back to 0, so it will not turn off when held for a long period of time.
  * 6. The fundamental problem with this program is that pushbutton SW2 is sensed
  *    in each cycle of the loop, and if its state is read as pressed, another
  *    count is added to the SW2Count variable. The program needs to be made to
@@ -198,7 +226,7 @@ int main(void)
  *    program more readable at the expense of hiding the actual switch value in
  *    the definition statement instead of making it obvious in the if structure.
  *    Try it in your code, and modify the SW3 reset button to work with the same
- *    pressed adn notPressed definitions.
+ *    pressed and notPressed definitions.
  
         // Count new SW2 button presses
         if(SW2 == pressed && SW2Pressed == false)
@@ -228,7 +256,7 @@ int main(void)
  *    variables. Then, duplicate the required if condition structures and modify
  *    the variable names to represent the second player. LED D4 can still light
  *    if player 1 is the first to reach maxCount. Use LED D5 to show if the
- *    second palyer wins. Use a logical condition statement to reset the game
+ *    second player wins. Use a logical condition statement to reset the game
  *    by clearing the count and turning off the LEDs if either SW3 or SW4 is
  *    pressed.
  * 
