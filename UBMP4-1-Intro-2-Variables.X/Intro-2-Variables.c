@@ -9,7 +9,7 @@
  (Boolean, or bool) variables to store state for operations such as preventing 
  multiple counting of a singe button press during successive program loops.
  Additional activities include the creation of a two-player rapid-clicker game,
- simulating a real-world toggle button, and counting switch contact bounce.
+ simulating a real-world Prepressed button, and counting switch contact bounce.
 ==============================================================================*/
 
 #include    "xc.h"              // Microchip XC8 compiler include file
@@ -30,7 +30,8 @@ bool SW2Pressed = false;
 //Progamming Acitivity 1
 unsigned char SW5Count = 0;
 bool SW5Pressed = false;
-
+bool Prepressed = 0;
+bool Toggle = 0;
 #define pressed 0
 #define notPressed 1
 int main(void)
@@ -42,7 +43,7 @@ int main(void)
     // Code in this while loop runs repeatedly.
     while(1)
 	{
-        // Count new SW2 button presses (Progamming Activity 1)
+        /* Count new SW2 button presses
         if(SW2 == pressed && SW2Pressed == false)
         {
             LED3 = 1;
@@ -52,23 +53,14 @@ int main(void)
             }
             SW2Pressed = true;
         }
-          if(SW5 == pressed && SW5Pressed == false)
-        {
-            LED6 = 1;
-            if(SW5Count < 255)
-            {
-                SW2Count = SW2Count + 1;
-            }
-            SW2Pressed = true;
-        }
 
         // Clear pressed state if released
-        if(SW5 == notPressed)
+        if(SW2 == notPressed)
         {
-            LED6 = 0;
-            SW5Pressed = false;
+            LED3 = 0;
+            SW2Pressed = false;
         }
-    //Reset Button (Programming Activity 1)    
+    //Indication of Victory (SW2)  
     if(SW2Count >= maxCount)
         {
             LED4 = 1;
@@ -77,15 +69,6 @@ int main(void)
         {
             LED4 = 0;
         }
-         if(SW5Count >= maxCount)
-        {
-            LED5 = 1;
-        }
-        else
-        {
-            LED5 = 0;
-        }
-        
         // Reset count and turn off LED D4 (Program Analysis 7) (Programming Activity 1)
         if(SW3 == pressed||SW4 == pressed)
         {
@@ -94,7 +77,54 @@ int main(void)
             LED5 = 0;
             SW5Count = 0;
         }
-        
+        //Programming Activity 1
+          if(SW5 == pressed && SW5Pressed == false)
+        {
+            LED6 = 1;
+            if(SW5Count < 255)
+            {
+                SW5Count = SW5Count + 1;
+            }
+            SW5Pressed = true;
+        }
+
+        // Clear pressed state if released
+        if(SW5 == notPressed)
+        {
+            LED6 = 0;
+            SW5Pressed = false;
+        }
+        //Indication of Victory (SW5)  
+    if(SW5Count >= maxCount)
+        {
+            LED5 = 1;
+        }
+        else
+        {
+            LED5 = 0;
+        }
+        */
+    //Programming Activty 2
+    if(SW2 == 0 && Prepressed == false && Toggle == 0)
+    {
+        LED3 = 1;
+        Toggle = 1;
+    }
+    if(SW2 == 1 && Prepressed == false && Toggle == 1)
+    {
+        Prepressed = true;
+        Toggle = 0;
+    }
+    if(SW2 == 0 && Prepressed == true && Toggle == 0)
+    {
+        LED3 = 0;
+        Toggle = 1;
+    }
+    if(SW2 == 1 && Prepressed == true && Toggle == 1)
+    {
+        Prepressed = false;
+        Toggle = 0;
+    }
         // Add a short delay to the main while loop.
         __delay_ms(10);
         
@@ -261,8 +291,8 @@ int main(void)
  *    pressed.
  * 
  * 2. Use your knowledge of Boolean variables and logical conditions to simulate
- *    a toggle button. Each new press of the toggle button will 'toggle' an LED
- *    to its opposite state. (Toggle buttons are commonly used as push-on, 
+ *    a Prepressed button. Each new press of the Prepressed button will 'Prepressed' an LED
+ *    to its opposite state. (Prepressed buttons are commonly used as push-on, 
  *    push-off power buttons in digital devices.)
  * 
  * 3. A multi-function button can be used to enable one action when pressed, and
@@ -275,7 +305,7 @@ int main(void)
  * 4. Do your pushbuttons bounce? Switch bounce is the term that describes
  *    switch contacts repeatedly closing and opening before settling in their
  *    final (usually closed) state. Switch bounce in a room's light switch is
- *    not a big concern, but switch bounce can be an issue in a toggle button
+ *    not a big concern, but switch bounce can be an issue in a Prepressed button
  *    because the speed of a microcontroller lets it see each bounce as a new,
  *    separate event. Use a variable to count the number of times a pushbutton
  *    is pressed and display the count on the LEDs. Use a separate pushbutton
